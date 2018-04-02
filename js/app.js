@@ -9,10 +9,12 @@ const editButton = document.getElementById("edit-username-button");
 const messageInput = document.getElementById("new-message");
 const sendButton = document.getElementById("send-button");
 const messages = document.getElementById("messages");
+const reloadButton= document.getElementById("reload-button");
 
 // Add a click handlers to global buttons
 sendButton.onclick = sendMessage;
 editButton.onclick = editUsername;
+reloadButton.onclick = getAllMessages;
 
 /*******************************************
 * Create a new message item:
@@ -51,8 +53,21 @@ function createNewMessage(messageObj) {
 *		using createNewMessage
 * - Don't forget to clear the message input.
 *****************************************************/
+
 function sendMessage() {
-  // Complete me!
+  let messageObj = {
+
+  username: usernameInput.value,
+  message: messageInput.value,
+
+  };
+  let newmsg= createNewMessage(messageObj);
+
+  axios.post('http://192.168.100.54/messages/create/',messageObj)
+  .then(response => {
+    console.log(response);
+  })
+  .catch(error => console.error(error));
 };
 
 
@@ -67,8 +82,15 @@ function sendMessage() {
 *		(you can use createNewMessage to do this)
 *****************************************************/
 function getAllMessages() {
-  // Complete me!
+  axios.get('http://192.168.100.54/messages/')
+  .then(response => response.data)
+  .then(newMessages => {
+    messages.innerHTML = "";
+    newMessages.forEach(createNewMessage)
+  })
+  .catch(error => console.error(error));
 };
+
 
 
 /*****************************************************************
